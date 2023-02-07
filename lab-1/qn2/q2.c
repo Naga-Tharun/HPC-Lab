@@ -5,38 +5,35 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-void matrix_mult(int n, double *A, double *B, double *C, int block_size)
+void block_matrix_multiplication(int n, double *A, double *B, double *C, int block_size)
 {
-    int i, j, k, ii, jj, kk;
-#pragma omp parallel for private(i, j, k, ii, jj, kk)
-    for (ii = 0; ii < n; ii += block_size)
-        for (jj = 0; jj < n; jj += block_size)
-            for (kk = 0; kk < n; kk += block_size)
+    int var_i, var_j, var_k, var_ii, var_jj, var_kk;
+#pragma omp parallel for private(var_i, var_j, var_k, var_ii, var_jj, var_kk)
+    for (var_ii = 0; var_ii < n; var_ii += block_size)
+        for (var_jj = 0; var_jj < n; var_jj += block_size)
+            for (var_kk = 0; var_kk < n; var_kk += block_size)
             {
-                // printf("--------------\n");
-
-                for (i = ii; i < MIN(ii + block_size, n); i++)
-                    for (j = jj; j < MIN(jj + block_size, n); j++)
-                        for (k = kk; k < MIN(kk + block_size, n); k++)
-                            C[i * n + j] += A[i * n + k] * B[k * n + j];
+                for (var_i = var_ii; var_i < MIN(var_ii + block_size, n); var_i++)
+                    for (var_j = var_jj; var_j < MIN(var_jj + block_size, n); var_j++)
+                        for (var_k = var_kk; var_k < MIN(var_kk + block_size, n); var_k++)
+                            C[var_i * n + var_j] += A[var_i * n + var_k] * B[var_k * n + var_j];
             }
 }
 
 void matrix_power(int n, double *A, int power, double *result, int block_size)
 {
-    int i, j, p;
+    int var_i, var_j, present_power;
     double *temp = (double *)malloc(n * n * sizeof(double));
 
-    for (i = 0; i < n * n; i++)
-        result[i] = 0;
+    for (var_i = 0; var_i < n * n; var_i++)
+        result[var_i] = 0;
 
-    for (p = 0; p < power; p++)
+    for (present_power = 0; present_power < power; present_power++)
     {
-        // #pragma omp parallel for private(i,j)
-        for (i = 0; i < n * n; i++)
-            temp[i] = A[i];
+        for (var_i = 0; var_i < n * n; var_i++)
+            temp[var_i] = A[var_i];
 
-        matrix_mult(n, temp, A, result, block_size);
+        block_matrix_multiplication(n, temp, A, result, block_size);
     }
 
     free(temp);
@@ -44,7 +41,7 @@ void matrix_power(int n, double *A, int power, double *result, int block_size)
 
 int main(int argc, char *argv[])
 {
-    int i, j, n, power, block_size, num_threads;
+    int var_i, var_j, n, power, block_size, num_threads;
     double *A, *result;
     double start_time, end_time;
 
@@ -58,8 +55,8 @@ int main(int argc, char *argv[])
                 A = (double *)malloc(n * n * sizeof(double));
                 result = (double *)malloc(n * n * sizeof(double));
 
-                for (i = 0; i < n * n; i++)
-                    A[i] = (double)rand() / RAND_MAX;
+                for (var_i = 0; var_i < n * n; var_i++)
+                    A[var_i] = (double)rand() / RAND_MAX;
 
                 omp_set_num_threads(num_threads);
 
@@ -67,9 +64,7 @@ int main(int argc, char *argv[])
 
                 matrix_power(n, A, power, result, block_size);
                 end_time = omp_get_wtime();
-                // #pragma omp barrier
                 printf("%d\t%d\t%d\t%d\t%lf\n", n, power, num_threads, block_size, end_time - start_time);
-                // size,power,block,thread,
                 free(A);
                 free(result);
 

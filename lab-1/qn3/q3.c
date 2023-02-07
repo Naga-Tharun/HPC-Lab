@@ -10,34 +10,34 @@
 #define MIN_POWER 2
 #define MAX_POWER 16
 
-void matrix_mult(double *A, double *B, double *C, int n)
+void matrix_multiplication_transpose(double *A, double *B, double *C, int n)
 {
-    int i, j, k;
+    int var_i, var_j, var_k;
     double sum;
 
-#pragma omp parallel for private(i, j, k, sum)
-    for (i = 0; i < n; i++)
+#pragma omp parallel for private(var_i, var_j, var_k, sum)
+    for (var_i = 0; var_i < n; var_i++)
     {
-        for (j = 0; j < n; j++)
+        for (var_j = 0; var_j < n; var_j++)
         {
             sum = 0.0;
-            for (k = 0; k < n; k++)
+            for (var_k = 0; var_k < n; var_k++)
             {
-                sum += A[i * n + k] * B[j * n + k];
+                sum += A[var_i * n + var_k] * B[var_j * n + var_k];
             }
-            C[i * n + j] = sum;
+            C[var_i * n + var_j] = sum;
         }
     }
 }
 
 void matrix_pow(double *A, double *B, int n, int power)
 {
-    int i;
+    int var_i;
     double *C = (double *)malloc(n * n * sizeof(double));
 
-    for (i = 0; i < power - 1; i++)
+    for (var_i = 0; var_i < power - 1; var_i++)
     {
-        matrix_mult(A, B, C, n);
+        matrix_multiplication_transpose(A, B, C, n);
         memcpy(A, C, n * n * sizeof(double));
     }
 
@@ -46,26 +46,23 @@ void matrix_pow(double *A, double *B, int n, int power)
 
 int main(int argc, char *argv[])
 {
-    int i, j, k;
+    int var_i, var_j, var_k;
     int n, power;
     double *A, *B;
     double start_time, end_time, elapsed;
 
     n = atoi(argv[1]);
-
-    // for (n = MIN_MATRIX_SIZE; n <= MAX_MATRIX_SIZE; n *= 2)
-    // {
     A = (double *)malloc(n * n * sizeof(double));
     B = (double *)malloc(n * n * sizeof(double));
-    for (i = 0; i < n * n; i++)
+    for (var_i = 0; var_i < n * n; var_i++)
     {
-        A[i] = (double)rand() / RAND_MAX;
+        A[var_i] = (double)rand() / RAND_MAX;
     }
-    for (i = 0; i < n; ++i) // finds the transpose of the matrix B
+    for (var_i = 0; var_i < n; ++var_i) // finds the transpose of the matrix B
     {
-        for (int j = 0; j < n; ++j)
+        for (int var_j = 0; var_j < n; ++var_j)
         {
-            B[j * n + i] = A[i * n + j];
+            B[var_j * n + var_i] = A[var_i * n + var_j];
         }
     }
     printf("\n");
@@ -80,8 +77,8 @@ int main(int argc, char *argv[])
             matrix_pow(A, B, n, power);
             gettimeofday(&tv2, &tz);
             elapsed = (double)(tv2.tv_sec - tv1.tv_sec) + (double)(tv2.tv_usec - tv1.tv_usec) * 1.e-6;
-
             printf("%d\t%d\t%d\t%lf\n", n, power, th, elapsed);
+
             if (th == 1)
             {
                 th = 0;
@@ -91,7 +88,6 @@ int main(int argc, char *argv[])
 
     free(A);
     free(B);
-    // }
 
     return 0;
 }
