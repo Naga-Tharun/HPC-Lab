@@ -42,6 +42,15 @@ These files create the RMT.pdf and RTM.pdf which contain the required graphs,
 Runtime vs Matrix Sizes by fixing number of threads.
 Runtime vs Threads by fixing the Matrix Size.
 
+Compare the runtime for all the 4 methods (OMM, OMM transpose, BMM, BMM transpose) using plot_compare.sh script
+
+```
+gnuplot plot_compare.sh
+```
+
+The plots are available in the file plot_compare.pdf
+
+
 **Question 1:**
 
 Using openmp and varying the no. of threads we calculate the nth power of a square matrix. We use the current time of the day to get the time of execution to calculate the nth power of a square matrix. The no. of threads varies as 1, 2, 4, 6, 8, 10, 12, 14, 16. The power, n varies from 2-16.
