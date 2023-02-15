@@ -83,7 +83,7 @@ int main()
         a[i] = (double)rand()/(double)RAND_MAX;
 
     // Sort the array using bottom-up merge sort
-    for (num_threads = 1; num_threads <= 16; num_threads++)
+    for (num_threads = 1; num_threads <= 16; num_threads+=2)
     {
         omp_set_num_threads(num_threads);
         gettimeofday(&start, NULL);
@@ -92,6 +92,9 @@ int main()
         elapsed_time = (end.tv_sec - start.tv_sec) * 1000.0;
         elapsed_time += (end.tv_usec - start.tv_usec) / 1000.0;
         printf("%d\t%f\n", num_threads, elapsed_time);
+        if(num_threads == 1){
+            num_threads = 0;
+        }
     }
 
     return 0;

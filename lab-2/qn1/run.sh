@@ -3,12 +3,12 @@
 clear
 
 gcc mergeSort_int.c -o mergeSort_int -fopenmp
-./mergeSort_int > data_int.dat
+./mergeSort_int > outI.dat
 
 gcc mergeSort_float.c -o mergeSort_float -fopenmp
-./mergeSort_float > data_float.dat
+./mergeSort_float > outF.dat
 
 gcc mergeSort_double.c -o mergeSort_double -fopenmp
-./mergeSort_double > data_double.dat
+./mergeSort_double > outD.dat
 
 rm -rf mergeSort_int mergeSort_float mergeSort_double
