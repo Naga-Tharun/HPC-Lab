@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set autoscale
-set term pdf size 13,3
+set term pdf size 8,5
 set output "plots.pdf"
 set xlabel "Number of threads" font "Bold,9" offset 0,1
 set ylabel "Runtime (seconds)" font "Bold,9" offset 3,0
@@ -13,7 +13,7 @@ set style data histogram
 set style histogram cluster gap 1
 set style fill solid border -1
 
-set multiplot layout 1,4 title "Runtime vs threads for different board sizes"
+set multiplot layout 2,2 title "Runtime vs threads for different board sizes"
 
 set title "Runtime vs threads for 10x10 board" font "Bold,9" offset 1.0,-0.5
 plot "plot_data/data_10.dat" using 4:xtic(2) title "10x10"

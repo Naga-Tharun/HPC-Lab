@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set autoscale
-set term pdf size 13,3
+set term pdf size 7,3
 set output "plots.pdf"
 set xlabel "Number of threads" font "Bold,9" offset 0,1
 set ylabel "Runtime (milli seconds)" font "Bold,9" offset 3,0
@@ -13,7 +13,7 @@ set style data histogram
 set style histogram cluster gap 1
 set style fill solid border -1
 
-set multiplot layout 1,4 title "Runtime vs threads for different data types"
+set multiplot layout 2,2 title "Runtime vs threads for different data types"
 
 set title "Runtime vs threads for data type: int" font "Bold,9" offset 1.0,-0.5
 plot "outI.dat" using 2:xtic(1) title "int"
