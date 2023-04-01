@@ -1,22 +1,26 @@
+
 /* Coarse List*/
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-public class CoarseList{
+
+public class CoarseList {
   private Node head;
   private Node tail;
   private Lock lock = new ReentrantLock();
+
   public CoarseList() {
-    head  = new Node(Integer.MIN_VALUE);
-    tail  = new Node(Integer.MAX_VALUE);
+    head = new Node(Integer.MIN_VALUE);
+    tail = new Node(Integer.MAX_VALUE);
     head.next = this.tail;
-     tail.prev = head; // prev link
-  }  
-  /*  Add an element.*/
+    tail.prev = head; // prev link
+  }
+
+  /* Add an element. */
   public boolean add(int item) {
     Node pred, curr;
     int key = item;
-    try{
-    lock.lock();
+    try {
+      lock.lock();
       pred = head;
       curr = pred.next;
       while (curr.key < key) {
@@ -37,7 +41,8 @@ public class CoarseList{
       lock.unlock();
     }
   }
-  /* Remove an element.*/
+
+  /* Remove an element. */
   public boolean remove(int item) {
     Node pred, curr;
     int key = item;
@@ -49,18 +54,19 @@ public class CoarseList{
         pred = curr;
         curr = curr.next;
       }
-      if (key == curr.key) {  // present
+      if (key == curr.key) { // present
         pred.next = curr.next;
         curr.next.prev = pred; // prev link
         return true;
       } else {
-        return false;         // not present
+        return false; // not present
       }
-    } finally {               // always unlock
+    } finally { // always unlock
       lock.unlock();
     }
   }
-  /*Test whether element is present.*/
+
+  /* Test whether element is present. */
   public boolean contains(int item) {
     Node pred, curr;
     int key = item;
@@ -73,25 +79,27 @@ public class CoarseList{
         curr = curr.next;
       }
       return (key == curr.key);
-    } finally {               // always unlock
+    } finally { // always unlock
       lock.unlock();
     }
   }
-  public void display()
-  {
-	Node temp=head;
-	while(temp.next!=null){
-		System.out.print("\t"+temp.key);
-		temp=temp.next;
-	}
+
+  public void display() {
+    Node temp = head;
+    while (temp.next != null) {
+      System.out.print("\t" + temp.key);
+      temp = temp.next;
+    }
   }
+
   private class Node {
     int key;
     Node next;
     Node prev; // previous link
+
     Node(int item) {
       this.key = item;
-      this.next=null;
+      this.next = null;
       this.prev = null;
     }
   }
