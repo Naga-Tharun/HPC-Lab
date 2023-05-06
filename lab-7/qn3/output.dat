@@ -1,0 +1,44 @@
+Number of threads: 1
+Number of operations: 358706592
+Elapsed time: 10000 ms
+Throughput: 35.8706592
+
+Number of threads: 2
+Number of operations: 74546551
+Elapsed time: 10000 ms
+Throughput: 7.4546551
+
+Number of threads: 4
+Number of operations: 80355135
+Elapsed time: 10000 ms
+Throughput: 8.0355135
+
+Number of threads: 6
+Number of operations: 80602397
+Elapsed time: 10000 ms
+Throughput: 8.060239699999999
+
+Number of threads: 8
+Number of operations: 70143833
+Elapsed time: 10000 ms
+Throughput: 7.0143832999999995
+
+Number of threads: 10
+Number of operations: 65235172
+Elapsed time: 10000 ms
+Throughput: 6.5235172
+
+Number of threads: 12
+Number of operations: 61278043
+Elapsed time: 10000 ms
+Throughput: 6.1278043
+
+Number of threads: 14
+Number of operations: 51778772
+Elapsed time: 10000 ms
+Throughput: 5.1778772
+
+Number of threads: 16
+Number of operations: 550256
+Elapsed time: 10000 ms
+Throughput: 0.055025599999999994
