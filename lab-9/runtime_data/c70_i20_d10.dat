@@ -1,0 +1,5 @@
+prefilling_done	 c_name:cTreap:num_threads:1 :range:10000 :totalOps:143173273 :throughput:28.6346546
+prefilling_done	 c_name:cTreap:num_threads:2 :range:10000 :totalOps:55321378 :throughput:11.0642756
+prefilling_done	 c_name:cTreap:num_threads:4 :range:10000 :totalOps:89164844 :throughput:17.8329688
+prefilling_done	 c_name:cTreap:num_threads:6 :range:10000 :totalOps:88092963 :throughput:17.6185926
+prefilling_done	 c_name:cTreap:num_threads:8 :range:10000 :totalOps:88770079 :throughput:17.7540158

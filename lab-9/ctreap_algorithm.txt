@@ -1,0 +1,243 @@
+class Node{
+    final K key;
+    final int priority;
+    volatile boolean transit1, transit2, mark;
+    volatile TreapNode left, right, parent, pred, succ;
+    ReenetrantLock succLock, treeLock;
+
+    Node(x, pri){
+        this.key = x;
+        this.priority = pri;
+        this.transit1 = true;
+        this.transit2 = false;
+        this.mark = false;
+        this.left = null;
+        this.right = null;
+        this.parent = null;
+        this.pred = null;
+        this.succ = null;
+    }
+}
+
+contains(x){
+    tnode <- search(x)
+    if(tnode.key != x) then
+        while tnode.key > x do
+            tnode <- tnode.pred 
+        end while
+
+        while tnode.key < x do
+            tnode <- tnode.succ
+        end while
+    end if
+
+    return ((tnode.key == x) and !(tnode.transit2))
+}
+
+
+insert(x, pri){
+
+    while (true) do
+        tnode <- search(x);
+        parent <- tnode.parent;
+
+        if tnode.key >= x then 
+            p <- tnode.pred 
+        else
+            p <- tnode
+        end if
+
+        if (!p.trySuccLock()) then
+            repeat // starts from the while loop
+        end if
+
+        s <- p.succ
+
+        if (p.transit2) or (s.mark) then
+            unLock(p)
+            repeat
+        end if
+
+        if ((x > p.key) and (x <= s.key)) then
+            if (x = s.key) then 
+                unLock(p)
+                return false
+            end if
+            if (!tnode.tryTreeLock()) then
+                unLock(p)
+                repeat
+            end if
+            if (tnode.transit1) or (tnode.transit2) or (parent != tnode.parent) then
+                unLock(p,tnode)
+                repeat
+            end if
+
+            flag <- insertIntoTreap(p, tnode, x, pri)
+
+            if (flag = true) then  
+                return true
+            else 
+                unLock(p, tnode)
+            end if
+        end if
+        unLock(p)
+        repeat
+    end while
+}
+
+
+insertIntoTreap(p, tnode, x, pri){
+    s <- p.succ
+    if ((x < tnode.key and tnode.left = null) or (x > tnode.key and tnode.right = null)) then
+        newTNode <- new Node(x, pri)
+        newTNode.parent <- tnode
+        newTNode.succ <- s
+        newTNode.pred <- p
+        s.pred <- newTNode
+        p.succ <- newTNode
+
+        if (x < tnode.key) then
+            tnode.left <- newTNode
+        else
+            tnode.right <- newTNode
+        end if
+
+        unLock(p, tnode)
+        adjustHrap(newTNode)
+        return true
+    end if
+    return false
+}
+
+
+adjustHeap(tnode){
+    while(true) do
+        tnParentPatent <- tnode.parent.parent
+        if (!tnParentPatent.tryTreeLock()) then
+            repeat //starts from the while loop
+        end if
+
+        tnParent <- tnode.parent
+        if (tnParentPatent.mark or !tnParent.tryTreeLock()) then
+            unLock(tnParentPatent)
+            repeat 
+        end if
+
+        if (tnParent.transit1 or tnParent.transit2 or !tnode.tryTreeLock()) then
+            unLock(nParentPatent, nParent)
+        end if
+
+        if (tnParentParent !- tnode.parent.parent) or (tnParent != tnode.parent) then
+            unLock(tnParentParent, tnParent, tnode)
+            repeat 
+        end if
+
+        if (tnParent.pri <= tnode.pri) then
+            boolean flag <- false
+            if (tnParent.left = tnode) then
+                if tnode.right != null then 
+                    tnRight <- tnode.right
+                    tnRightParent <- tnode.right.parent
+
+                    if !tnRight.tryTreeLock() then 
+                        unLock(tnParentParent, tnParent, tnode)
+                        repeat
+                    end if
+
+                    if (tnRight != tnode.right) or (tnRight.mark) or (tnRightParent != tnode) then
+                        unLock(tnParentParent, tnParent, tnode, tnRight)
+                        repeat
+                    end if
+
+                    flag = true
+                end if
+
+                singleRotateRight(tnParent, tnode)
+                if (flag = true) then
+                    unLock(tnParent.left)
+                end if
+            else
+                Symmetric to tnode.right
+            end if
+            unLock(tnParentParent, tnParent, tnode)
+        else    
+            tnode.transit1 <- false
+            unLock(tnParentParent, tnParent, tnode)
+            break
+        end if
+    end while
+}
+
+
+delete(x){
+    while (true) do
+        tnode <- search(x)
+        if tnode.key = x them
+            p <- tnode.pred
+        else
+            p <- tnode
+        end if
+
+        if (!p.trySuccLock()) then
+            repeat //starts from the while loop
+        end if
+
+        if (p.mark) then
+            unLock(p)
+            repeat
+        end if
+        s <- p.succ
+
+        if ((x > p.key) and (x <= s.key)) then
+            if (s.key > x) then
+                unLock(p)
+                return false
+            end if
+            if (!s.trySuccLock()) then
+                unLock(p)
+                repeat 
+            end if
+            s.transit2 <- true
+            tnode <- s
+            boolean flag <- aquireTreeLocks(tnode)
+
+            while (flag) do 
+                if (tnode.left != null) and (tnode.right != null) then
+                    child <- maxPriorityNode(tnode.left, tnode.right)
+                    if (child = tnode.left) and (child.right != null) then
+                        tnodeChild <- child.right
+                    else if (child == tnode.right) and (child.left !- null) then
+                        tnodeChild <- child.left
+                    end if
+
+                    if (child == tnode.left) then
+                        singleRotateRight(tnode, tnode.left)
+                    else   
+                        singleRotateLeft(tnode, tnode.right)
+                    end if 
+
+                    if (tnodeChild != null) then
+                        unLock(tnodeChild)
+                    end if
+
+                    unLock(tnode.parent.parent, tnode.parent, tnode)
+                    flag <- aquireTreeLocks(tnode)
+                else
+                    tnode.mark <- true
+                    sSucc <- s.succ
+                    sSucc.pred <- p
+                    p.succ <- sSucc
+                    unLock(p, s)
+                    removeFromTreap(tnode)
+                    return true
+                end if
+            end while
+
+            if !flag then
+                unLock(p, s)
+                repeat
+            end if
+        end if
+        unLock(p)
+    end while
+}
