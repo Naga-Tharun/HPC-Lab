@@ -1,0 +1,11 @@
+prefilling_done	 c_name:LazySkipList:num_threads:1 :range:10000 :totalOps:48867309 :throughput:4.8867309
+prefilling_done	 c_name:LazySkipList:num_threads:2 :range:10000 :totalOps:93779977 :throughput:9.3779977
+prefilling_done	 c_name:LazySkipList:num_threads:4 :range:10000 :totalOps:192020866 :throughput:19.2020866
+prefilling_done	 c_name:LazySkipList:num_threads:6 :range:10000 :totalOps:272157250 :throughput:27.215725
+prefilling_done	 c_name:LazySkipList:num_threads:8 :range:10000 :totalOps:293571584 :throughput:29.3571584
+prefilling_done	 c_name:LazySkipList:num_threads:10 :range:10000 :totalOps:307536216 :throughput:30.7536216
+prefilling_done	 c_name:LazySkipList:num_threads:12 :range:10000 :totalOps:305812473 :throughput:30.5812473
+prefilling_done	 c_name:LazySkipList:num_threads:14 :range:10000 :totalOps:308086648 :throughput:30.8086648
+prefilling_done	 c_name:LazySkipList:num_threads:16 :range:10000 :totalOps:306725355 :throughput:30.672535500000002
+prefilling_done	 c_name:LazySkipList:num_threads:18 :range:10000 :totalOps:304373727 :throughput:30.4373727
+prefilling_done	 c_name:LazySkipList:num_threads:20 :range:10000 :totalOps:297674456 :throughput:29.767445600000002
